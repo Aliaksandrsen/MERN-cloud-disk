@@ -5,7 +5,7 @@ import {addUploadFile, changeUploadFile, showUploader} from "../reducers/uploadR
 export function getFiles(dirId) {
     return async dispatch => {
         try {
-            const response = await axios.get(`http://localhost:5000/api/files${dirId ? '?parent='+dirId : ''}`, {
+            const response = await axios.get(`http://localhost:4000/api/files${dirId ? '?parent='+dirId : ''}`, {
                 headers: {Authorization: `Bearer ${localStorage.getItem('token')}`}
             })
             dispatch(setFiles(response.data))
@@ -18,7 +18,7 @@ export function getFiles(dirId) {
 export function createDir(dirId, name) {
     return async dispatch => {
         try {
-            const response = await axios.post(`http://localhost:5000/api/files`,{
+            const response = await axios.post(`http://localhost:4000/api/files`,{
                 name,
                 parent: dirId,
                 type: 'dir'
@@ -33,8 +33,10 @@ export function createDir(dirId, name) {
 }
 
 export function uploadFile(file, dirId) {
+    console.log('uploadFile ~ file', file); 
     return async dispatch => {
         try {
+            
             const formData = new FormData()
             formData.append('file', file)
             if (dirId) {
@@ -43,7 +45,7 @@ export function uploadFile(file, dirId) {
             const uploadFile = {name: file.name, progress: 0, id: Date.now()}
             dispatch(showUploader())
             dispatch(addUploadFile(uploadFile))
-            const response = await axios.post(`http://localhost:5000/api/files/upload`, formData, {
+            const response = await axios.post(`http://localhost:4000/api/files/upload`, formData, {
                 headers: {Authorization: `Bearer ${localStorage.getItem('token')}`},
                 onUploadProgress: progressEvent => {
                     const totalLength = progressEvent.lengthComputable ? progressEvent.total : progressEvent.target.getResponseHeader('content-length') || progressEvent.target.getResponseHeader('x-decompressed-content-length');
@@ -62,7 +64,7 @@ export function uploadFile(file, dirId) {
 
 
 export async function downloadFile(file) {
-    const response = await fetch(`http://localhost:5000/api/files/download?id=${file._id}`,{
+    const response = await fetch(`http://localhost:4000/api/files/download?id=${file._id}`,{
         headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
         }
@@ -82,7 +84,7 @@ export async function downloadFile(file) {
 export function deleteFile(file) {
     return async dispatch => {
         try {
-            const response = await axios.delete(`http://localhost:5000/api/files?id=${file._id}`,{
+            const response = await axios.delete(`http://localhost:4000/api/files?id=${file._id}`,{
                 headers:{
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 }

@@ -27,6 +27,7 @@ const Disk = () => {
     }
 
     function fileUploadHandler(event) {
+        console.log('fileUploadHandler ~ event', event);  
         const files = [...event.target.files]
         files.forEach(file => dispatch(uploadFile(file, currentDir)))
     }
@@ -44,6 +45,8 @@ const Disk = () => {
     }
 
     function dropHandler(event) {
+        console.log('dropHandler ~ event', event); 
+        console.log('dropHandler ~ event.dataTransfer.files', event.dataTransfer.files); 
         event.preventDefault()
         event.stopPropagation()
         let files = [...event.dataTransfer.files]
